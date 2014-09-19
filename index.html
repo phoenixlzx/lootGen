@@ -70,7 +70,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="span4">
+                    <div class="span4" ng-hide="loots.length === 1">
                         <button class="btn btn-danger" ng-click="remove(loots, loot); refresh();">
                             Delete
                         </button>
@@ -133,7 +133,7 @@
                         <label class="control-label">Lore</label>
                         <div class="controls">
                             <input type="text" required="required" placeholder="" ng-model="lore">
-                            <button class="btn btn-warning btn-sm" ng-click="remove(newLoot.lores, lore)">
+                            <button class="btn btn-warning btn-sm" ng-hide="newLoot.lores.length === 1" ng-click="remove(newLoot.lores, lore)">
                                 Delete this lore
                             </button>
                         </div>
@@ -207,7 +207,7 @@
                                 </option>
                             </select>
                             <input type="number" placeholder="Level" ng-model="enchant.level">
-                            <button class="btn btn-warning btn-sm" ng-click="remove(newLoot.enchantments, enchant)">
+                            <button class="btn btn-warning btn-sm" ng-hide="newLoot.enchantments.length === 1" ng-click="remove(newLoot.enchantments, enchant)">
                                 Delete this enchantment
                             </button>
                         </div>
