@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="lootGen" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="lootGen" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="lootGen" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="lootGen" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>InfernalMobs Loot Generator</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="app/angular/angular.min.js"></script>
+    <script src="app.js"></script>
+    <script src="app/js/json2yaml.js"></script>
+    <link rel="stylesheet" href="app/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="app/css/style.css"/>
+</head>
+<body>
+
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<div class="container" ng-controller="lootController">
+    <div class="row">
+        <div class="span6">
+            <h3>Loots</h3>
+            <div class="row">
+                <div class="span12 loot-block" ng-repeat="loot in loots track by $index">
+                    <div class="span12">
+                        <b>Item</b>: {{ loot.item }}
+                    </div>
+                    <div class="span12">
+                        <b>Amount</b>: {{ loot.amount }}
+                    </div>
+                    <div class="span12">
+                        <b>Name</b>: {{ loot.name }}
+                    </div>
+                    <div class="span12" ng-show="loot.powersMin">
+                        <b>PowersMin</b>: {{ loot.powersMin }}
+                    </div>
+                    <div class="span12" ng-show="loot.powersMax">
+                        <b>PowersMax</b>: {{ loot.powersMax }}
+                    </div>
+                    <div class="span12" ng-show="loot.minEnchantments">
+                        <b>minEnchantments</b>: {{ loot.minEnchantments }}
+                    </div>
+                    <div class="span12" ng-show="loot.maxEnchantments">
+                        <b>maxEnchantments</b>: {{ loot.maxEnchantments }}
+                    </div>
+                    <div class="span12">
+                        <b>Lores</b>
+                        <ul class="unstyled">
+                            <li ng-repeat="lore in loot.lores">
+                                - {{ lore }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="span12">
+                        <b>Durability</b>: {{ loot.durability }}
+                    </div>
+                    <div class="span12">
+                        <b>Enchantments</b>
+                        <ul class="unstyled">
+                            <li ng-repeat="enchant in loot.enchantments">
+                                - {{ enchant.enchantment }} Level {{ enchant.level }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="span4">
+                        <button class="btn btn-danger" ng-click="remove(loots, loot); refresh();">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <form class="form-horizontal">
+                <fieldset>
+                    <legend>Add more</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="item">Item</label>
+                        <div class="controls">
+                            <input type="text" id="item" placeholder="" required="required" ng-model="newLoot.item">
+                            <span class="help-block">Loot item ID or name.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="amount">Amount</label>
+                        <div class="controls">
+                            <input type="number" id="amount" required="required" placeholder="" ng-model="newLoot.amount">
+                            <span class="help-block">Loot item amount.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="powersMin">PowersMin</label>
+                        <div class="controls">
+                            <input type="number" id="powersMin" placeholder="" ng-model="newLoot.powersMin">
+                            <span class="help-block">Minimum power to loot this item, leave blank to unset.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="powersMax">PowersMax</label>
+                        <div class="controls">
+                            <input type="number" id="powersMax" placeholder="" ng-model="newLoot.powersMax">
+                            <span class="help-block">Maximum power to loot this item, leave blank to unset.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" required="required" for="minEnchantments">MinEnchantments</label>
+                        <div class="controls">
+                            <input type="number" id="minEnchantments" placeholder="" ng-model="newLoot.minEnchantments">
+                            <span class="help-block">Minimum enchantments of this item, leave blank to use all enchantments.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="maxEnchantments">MaxEnchantments</label>
+                        <div class="controls">
+                            <input type="number" id="maxEnchantments" placeholder="" ng-model="newLoot.maxEnchantments">
+                            <span class="help-block">Maximum enchantments of this item, leave blank to use all enchantments.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="durability">Durability</label>
+                        <div class="controls">
+                            <input type="number" id="durability" required="required" placeholder="" ng-model="newLoot.durability">
+                            <span class="help-block">Durability of the loot</span>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-repeat="lore in newLoot.lores track by $index">
+                        <label class="control-label">Lore</label>
+                        <div class="controls">
+                            <input type="text" required="required" placeholder="" ng-model="lore">
+                            <button class="btn btn-warning btn-sm" ng-click="remove(newLoot.lores, lore)">
+                                Delete this lore
+                            </button>
+                        </div>
+                    </div>
+                    <div class="control-group" ng-repeat="enchant in newLoot.enchantments track by $index">
+                        <label class="control-label">Enchantment</label>
+                        <div class="controls">
+                            <select ng-model="enchant.enchantment">
+                                <option value="ARROW_DAMAGE">
+                                    Arrow Damage
+                                </option>
+                                <option value="ARROW_FIRE">
+                                    Arrow Fire
+                                </option>
+                                <option value="ARROW_INFINITE">
+                                    Arrow Infinite
+                                </option>
+                                <option value="ARROW_KNOCKBACK">
+                                    Arrow Knockback
+                                </option>
+                                <option value="DAMAGE_ALL">
+                                    Damage All
+                                </option>
+                                <option value="DAMAGE_ARTHROPODS">
+                                    Damage Arthropods
+                                </option>
+                                <option value="DAMAGE_UNDEAD">
+                                    Damage Undead
+                                </option>
+                                <option value="DIG_SPEED">
+                                    Dig Speed
+                                </option>
+                                <option value="DURABILITY">
+                                    Durability
+                                </option>
+                                <option value="FIRE_ASPECT">
+                                    Fire Aspect
+                                </option>
+                                <option value="KNOCKBACK">
+                                    Knockback
+                                </option>
+                                <option value="LOOT_BONUS_BLOCKS">
+                                    Loot Bonus blocks
+                                </option>
+                                <option value="LOOT_BONUS_MOBS">
+                                    Loot Bonus mobs
+                                </option>
+                                <option value="OXYGEN">
+                                    Oxygen
+                                </option>
+                                <option value="PROTECTION_ENVIRONMENTAL">
+                                    Protection Environmental
+                                </option>
+                                <option value="PROTECTION_EXPLOSIONS">
+                                    Protection Explosions
+                                </option>
+                                <option value="PROTECTION_FALL">
+                                    Protection Fall
+                                </option>
+                                <option value="PROTECTION_FIRE">
+                                    Protection Fire
+                                </option>
+                                <option value="PROTECTION_PROJECTILE">
+                                    Protect Projectile
+                                </option>
+                                <option value="SILK_TOUCH">
+                                    Silk Touch
+                                </option>
+                                <option value="WATER_WORKER">
+                                    Water Worker
+                                </option>
+                            </select>
+                            <input type="number" placeholder="Level" ng-model="enchant.level">
+                            <button class="btn btn-warning btn-sm" ng-click="remove(newLoot.enchantments, enchant)">
+                                Delete this enchantment
+                            </button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <form class="in-line">
+                            <input type="text" placeholder="Some other lores!" ng-model="newLore" />
+                            <button class="btn btn-primary" ng-click="addLore(newLore)">
+                                Add lore
+                            </button>
+                            <button class="btn btn-info" ng-click="addEnchant()">
+                                Add enchantment
+                            </button>
+                        </form>
+                    </div>
+                    <div class="control-group">
+                        <button class="btn btn-success btn-block" ng-click="addLoot()">
+                            Add loot
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="span6">
+            <h3>YAML Output</h3>
+            <textarea name="loots" id="loots" ng-model="yaml" class="yaml-block" style="width: 100%; height: 100%; min-height: 50em; font-family: monospace;"></textarea>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
