@@ -31,16 +31,9 @@ angular.module('lootGen', [])
             "powersMax": 3,
             "minEnchantments": 1,
             "maxEnchantments": 2,
-            "lores": [
-                "Some fantastic lores!"
-            ],
+            "lores": [],
             "durability": 10,
-            "enchantments": [
-                {
-                    "enchantment": "DAMAGE_UNDEAD",
-                    "level": 5
-                }
-            ]
+            "enchantments": []
         };
 
         var parseLoots = function(loots) {
@@ -56,6 +49,7 @@ angular.module('lootGen', [])
                     result_enchants[enchantIndex + 1].level = enchant.level;
                 });
                 for (var key in loot) {
+                    if (key === 'lores') continue;
                     if (loot[key]) {
                         result.loots[index + 1][key] = loot[key];
                     }

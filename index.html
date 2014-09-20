@@ -84,7 +84,14 @@
                         <label class="control-label" for="item">Item</label>
                         <div class="controls">
                             <input type="text" id="item" placeholder="" required="required" ng-model="newLoot.item">
-                            <span class="help-block">Loot item ID or name.</span>
+                            <span class="help-block">Item ID or archive name.</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="name">Item</label>
+                        <div class="controls">
+                            <input type="text" id="name" placeholder="" required="required" ng-model="newLoot.name">
+                            <span class="help-block">Loot item name.</span>
                         </div>
                     </div>
                     <div class="control-group">
@@ -132,7 +139,7 @@
                     <div class="control-group" ng-repeat="lore in newLoot.lores track by $index">
                         <label class="control-label">Lore</label>
                         <div class="controls">
-                            <input type="text" required="required" placeholder="" ng-model="lore">
+                            <input type="text" required="required" disabled="disabled" placeholder="" ng-model="lore">
                             <button class="btn btn-warning btn-sm" ng-hide="newLoot.lores.length === 1" ng-click="remove(newLoot.lores, lore)">
                                 Delete this lore
                             </button>
@@ -203,6 +210,12 @@
                                     Silk Touch
                                 </option>
                                 <option value="WATER_WORKER">
+                                    Water Worker
+                                </option>
+                                <option value="LURE">
+                                    Lure
+                                </option>
+                                <option value="THORNS">
                                     Water Worker
                                 </option>
                             </select>
